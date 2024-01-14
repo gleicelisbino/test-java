@@ -4,10 +4,11 @@ import br.com.blz.testjava.dto.requests.ProductRequest
 import br.com.blz.testjava.dto.responses.ProductResponse
 import br.com.blz.testjava.model.Product
 import org.mapstruct.Mapper
+import org.mapstruct.Mapping
 
 @Mapper
 interface ProductMapper {
-
+  @Mapping(source = "ismarketable", target = "isMarketable")
   fun toProductResponse(product: Product): ProductResponse
 
   fun toProduct(productRequest: ProductRequest): Product

@@ -4,8 +4,6 @@ data class Product(
   val sku: Long,
   val name: String,
   val inventory: Inventory,
-  val isMarketable: Boolean? = null
+  val ismarketable: Boolean
 )
-//{
-//  constructor() : this(0, "", Inventory(), false)
-//}
+

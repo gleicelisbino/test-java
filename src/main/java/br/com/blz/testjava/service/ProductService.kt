@@ -18,7 +18,8 @@ class ProductService(private val productRepository: ProductRepository,
     productRepository.findBySku(product.sku)?.let {
       throw ProductAlreadyExistsException(product.sku)
     }
-    return productMapper.toProductResponse(productRepository.save(calculateInventoryQuantity(product)))
+    val calculated = productRepository.save(calculateInventoryAndMarketable(product))
+    return productMapper.toProductResponse(calculated)
   }
 
   fun getProductBySku(sku: Long): ProductResponse {
@@ -32,19 +33,22 @@ class ProductService(private val productRepository: ProductRepository,
       ?: throw ProductNotFoundException(sku)
 
     val updatedProduct = productMapper.toProduct(request).copy(sku = existingProduct.sku)
-    return productMapper.toProductResponse(productRepository.save(calculateInventoryQuantity(updatedProduct)))
+    return productMapper.toProductResponse(productRepository.save(calculateInventoryAndMarketable(updatedProduct)))
   }
 
   fun deleteProductBySku(sku: Long) {
     productRepository.deleteBySku(sku)
   }
 
-  private fun calculateInventoryQuantity(product: Product): Product {
+  fun calculateInventoryAndMarketable(product: Product): Product {
     val inventoryQuantity = product.inventory.warehouses.sumOf { it.quantity }
-    val isMarketable = inventoryQuantity > 0
+    val ismarketable = inventoryQuantity > 0
+
     return product.copy(
       inventory = product.inventory.copy(quantity = inventoryQuantity),
-      isMarketable = isMarketable
+      ismarketable = ismarketable
     )
   }
+
+
 }
