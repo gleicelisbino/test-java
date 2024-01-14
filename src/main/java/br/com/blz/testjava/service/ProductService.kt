@@ -7,12 +7,14 @@ import br.com.blz.testjava.exception.ProductAlreadyExistsException
 import br.com.blz.testjava.exception.ProductNotFoundException
 import br.com.blz.testjava.model.Product
 import br.com.blz.testjava.repository.ProductRepository
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Service
 
+@Qualifier("productServiceQualifier")
 @Service
 class ProductService(
-  private val productRepository: ProductRepository,
-  private val productMapper: ProductMapper
+  @Qualifier("productRepositoryQualifier") private val productRepository: ProductRepository,
+  @Qualifier("productMapperQualifier") private val productMapper: ProductMapper
 ) {
 
   fun createProduct(request: ProductRequest): ProductResponse {

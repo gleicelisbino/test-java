@@ -19,10 +19,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 
-@SpringBootTest
 class ProductServiceTest {
 
   private val sku: Long = 43264
@@ -78,7 +76,7 @@ class ProductServiceTest {
       productService.createProduct(productRequest)
     }
 
-    assertEquals("The product with SKU: ${productRequest.sku} already exists.", exception.message)
+    assertEquals("The product with SKU: ${mockProduct.sku} already exists.", exception.message)
   }
 
   @Test

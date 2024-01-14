@@ -9,11 +9,14 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mockito
 import org.mockito.junit.jupiter.MockitoExtension
+import org.springframework.beans.factory.annotation.Qualifier
 
 @ExtendWith(MockitoExtension::class)
 class ProductControllerTest {
 
+  @Qualifier("productProductService")
   private lateinit var productService: ProductService
+  @Qualifier("productControllerQualifier")
   private lateinit var productController: ProductController
   private val sku: Long = 43264
 

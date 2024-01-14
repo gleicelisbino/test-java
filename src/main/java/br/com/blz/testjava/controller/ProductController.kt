@@ -3,6 +3,7 @@ package br.com.blz.testjava.controller
 import br.com.blz.testjava.dto.requests.ProductRequest
 import br.com.blz.testjava.dto.responses.ProductResponse
 import br.com.blz.testjava.service.ProductService
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -14,9 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 
+@Qualifier("productControllerQualifier")
 @RestController
 @RequestMapping("/products")
-class ProductController(private val productService: ProductService) {
+class ProductController(@Qualifier("productServiceQualifier") private val productService: ProductService) {
 
   @GetMapping("/{sku}")
   fun getProductBySku(@PathVariable sku: Long): ProductResponse {
