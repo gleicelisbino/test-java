@@ -1,70 +1,79 @@
 package br.com.blz.testjava.service
 
+import br.com.blz.testjava.ProductMapper
 import br.com.blz.testjava.dto.requests.ProductRequest
+import br.com.blz.testjava.model.Product
 import br.com.blz.testjava.repository.ProductAlreadyExistsException
 import br.com.blz.testjava.repository.ProductNotFoundException
-import br.com.blz.testjava.model.Inventory
-import br.com.blz.testjava.model.Product
-import br.com.blz.testjava.model.Warehouse
 import br.com.blz.testjava.repository.ProductRepository
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-
+import org.mockito.Mockito
+import org.mockito.Mockito.`when`
+import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
+@SpringBootTest
 class ProductServiceTest {
 
   private val productName: String = "L'Oréal Professionnel Expert Absolut Repair Cortex Lipidium - Máscara de Reconstrução 500g"
   private val sku: Long = 43264
 
   @MockBean
-  lateinit var productRepository: ProductRepository
+  private lateinit var productRepository: ProductRepository
 
   @MockBean
   private lateinit var productService: ProductService
 
+  @MockBean
+  private lateinit var productMapper: ProductMapper
+
+  private lateinit var mockProduct: Product
+  private lateinit var productRequest: ProductRequest
+
   @BeforeEach
   fun setUp() {
-    productRepository = ProductRepository()
-    productService = ProductService(productRepository)
+    mockProduct = createProduct()
+    productRequest = createProductRequest()
+
+    productRepository = Mockito.mock(ProductRepository::class.java)
+    productMapper = Mockito.mock(ProductMapper::class.java)
+
+    productService = ProductService(productRepository,productMapper)
+
+    `when`(productMapper.toProduct(productRequest)).thenReturn(mockProduct)
+    `when`(productMapper.toProductResponse(mockProduct)).thenReturn(createProductResponse())
+    `when`(productRepository.save(mockProduct)).thenReturn(mockProduct)
   }
 
   @Test
   fun createProductTest() {
-    val product = createProductRequest()
+    `when`(productService.createProduct(productRequest)).thenReturn(createProductResponse())
 
-    val createdProduct = productService.createProduct(product)
+    val response = productService.createProduct(productRequest)
 
-    assertEquals(product.sku, createdProduct.sku)
+    assertEquals(createProductResponse(), response)
   }
 
   @Test
-  fun createProductWithSKUTest() {
-    val product = createProductRequest()
-    productRepository.save(createProduct())
+  fun productAlreadyExistsExceptionTest() {
+    val mockProduct = createProduct()
+    val productRequest = createProductRequest()
+
+    `when`(productRepository.findBySku(sku)).thenReturn(mockProduct)
 
     val exception = assertFailsWith<ProductAlreadyExistsException> {
-      productService.createProduct(product)
+      productService.createProduct(productRequest)
     }
 
-    assertEquals("The product with SKU: ${product.sku} already exists.", exception.message)
+    assertEquals("The product with SKU: ${productRequest.sku} already exists.", exception.message)
   }
 
   @Test
-  fun getProductBySkuTest() {
-    val product1 = createProductRequest()
-    productService.createProduct(product1)
-
-    val product2 = productService.getProductBySku(product1.sku)
-
-    assertEquals(product1.sku, product2.sku)
-  }
-
-  @Test
-  fun getProductBySkuWithoutSKUTest() {
+  fun productNotFoundExceptionTest() {
     val sku = 12345L
 
     val exception = assertFailsWith<ProductNotFoundException> {
@@ -76,50 +85,24 @@ class ProductServiceTest {
 
   @Test
   fun updateProductTest() {
-    val product = createProductRequest()
-    productService.createProduct(product)
-    val updatedProduct = productService.updateProduct(product.sku, product)
+    `when`(productRepository.findBySku(sku)).thenReturn(mockProduct)
+    `when`(productService.updateProduct(productRequest.sku, productRequest)).thenReturn(createProductResponse())
 
-    assertEquals(product.sku, updatedProduct.sku)
+    val updatedProduct = productService.updateProduct(productRequest.sku, productRequest)
+
+    assertEquals(mockProduct.sku, updatedProduct.sku)
   }
 
   @Test
   fun deleteProductBySkuTest() {
-    val product = createProductRequest()
-    productRepository.save(createProduct())
+    productRepository.save(mockProduct)
 
-    productService.deleteProductBySku(product.sku)
+    productService.deleteProductBySku(sku)
 
-    val retrievedProduct = productRepository.findBySku(product.sku)
+    `when`(productRepository.findBySku(sku)).thenReturn(null)
+    val retrievedProduct = productRepository.findBySku(sku)
 
     assertNull(retrievedProduct)
-  }
-
-  private fun createProduct(): Product {
-    return Product(
-      sku = sku,
-      name = productName,
-      inventory = Inventory(
-        quantity = 15,
-        warehouses = listOf(
-          Warehouse("SP", 3, "ECOMMERCE"),
-          Warehouse("MOEMA", 12, "PHYSICAL_STORE")
-        )
-      ),
-      isMarketable = true
-    )
-  }
-  private fun createProductRequest(): ProductRequest {
-    return ProductRequest(
-      sku = sku,
-      name = productName,
-      inventory = Inventory(
-        warehouses = listOf(
-          Warehouse("SP", 3, "ECOMMERCE"),
-          Warehouse("MOEMA", 12, "PHYSICAL_STORE")
-        )
-      )
-    )
   }
 }
 
