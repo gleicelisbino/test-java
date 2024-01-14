@@ -138,11 +138,6 @@
                 </executions>
             </plugin>
             <plugin>
-            <groupId>org.sonarsource.scanner.maven</groupId>
-            <artifactId>sonar-maven-plugin</artifactId>
-            <version>3.10.0.2594</version>
-            </plugin>
-            <plugin>
                 <groupId>com.github.gantsign.maven</groupId>
                 <artifactId>ktlint-maven-plugin</artifactId>
                 <version>1.4.1</version>
@@ -156,5 +151,4 @@
             </plugin>
         </plugins>
 	</build>
-
 </project>
