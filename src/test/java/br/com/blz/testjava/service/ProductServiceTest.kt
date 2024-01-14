@@ -25,7 +25,6 @@ import org.springframework.boot.test.mock.mockito.MockBean
 @SpringBootTest
 class ProductServiceTest {
 
-  private val productName: String = "L'Oréal Professionnel Expert Absolut Repair Cortex Lipidium - Máscara de Reconstrução 500g"
   private val sku: Long = 43264
 
   @MockBean
@@ -116,8 +115,8 @@ class ProductServiceTest {
     productService.deleteProductBySku(sku)
 
     `when`(productRepository.findBySku(sku)).thenReturn(null)
-    val retrievedProduct = productRepository.findBySku(sku)
+    val deletedProduct = productRepository.findBySku(sku)
 
-    assertNull(retrievedProduct)
+    assertNull(deletedProduct)
   }
 }
