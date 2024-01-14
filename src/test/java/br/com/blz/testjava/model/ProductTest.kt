@@ -16,7 +16,7 @@ class ProductTest {
       productName,
       product.name
     )
-    assertEquals(true, product.isMarketable)
+    assertEquals(true, product.ismarketable)
   }
   private fun createProduct(): Product {
     return Product(
@@ -29,7 +29,7 @@ class ProductTest {
                 Warehouse("MOEMA", 12, "PHYSICAL_STORE")
             )
         ),
-        isMarketable = true
+        ismarketable = true
     )
   }
 }

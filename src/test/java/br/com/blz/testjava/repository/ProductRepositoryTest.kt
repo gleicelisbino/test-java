@@ -52,7 +52,7 @@ class ProductRepositoryTest {
           Warehouse("MOEMA", 12, "PHYSICAL_STORE")
         )
       ),
-      isMarketable = true
+      ismarketable = true
     )
   }
 }

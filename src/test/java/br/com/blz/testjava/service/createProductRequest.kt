@@ -21,7 +21,7 @@ fun createProduct(): Product {
         Warehouse("MOEMA", 12, "PHYSICAL_STORE")
       )
     ),
-    isMarketable = true
+    ismarketable = true
   )
 }
 
