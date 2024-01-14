@@ -3,8 +3,9 @@ package br.com.blz.testjava.service
 import br.com.blz.testjava.ProductMapper
 import br.com.blz.testjava.dto.requests.ProductRequest
 import br.com.blz.testjava.model.Product
-import br.com.blz.testjava.repository.ProductAlreadyExistsException
-import br.com.blz.testjava.repository.ProductNotFoundException
+import br.com.blz.testjava.exception.ProductAlreadyExistsException
+import br.com.blz.testjava.exception.ProductNotFoundException
+import br.com.blz.testjava.function.*
 import br.com.blz.testjava.repository.ProductRepository
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
@@ -32,12 +33,16 @@ class ProductServiceTest {
   private lateinit var productMapper: ProductMapper
 
   private lateinit var mockProduct: Product
+  private lateinit var updatedProduct: Product
   private lateinit var productRequest: ProductRequest
+  private lateinit var updatedProductRequest: ProductRequest
 
   @BeforeEach
   fun setUp() {
     mockProduct = createProduct()
+    updatedProduct = updatedProduct()
     productRequest = createProductRequest()
+    updatedProductRequest = updatedProductRequest()
 
     productRepository = Mockito.mock(ProductRepository::class.java)
     productMapper = Mockito.mock(ProductMapper::class.java)
@@ -85,12 +90,18 @@ class ProductServiceTest {
 
   @Test
   fun updateProductTest() {
+    val updatedProductRequest = updatedProductRequest()
     `when`(productRepository.findBySku(sku)).thenReturn(mockProduct)
-    `when`(productService.updateProduct(productRequest.sku, productRequest)).thenReturn(createProductResponse())
+    `when`(productMapper.toProduct(updatedProductRequest)).thenReturn(updatedProduct)
+    `when`(productService.updateProduct(mockProduct.sku, updatedProductRequest())).thenReturn(updatedProductResponse())
 
-    val updatedProduct = productService.updateProduct(productRequest.sku, productRequest)
+    val updatedProduct = productService.updateProduct(updatedProductRequest.sku, updatedProductRequest)
 
-    assertEquals(mockProduct.sku, updatedProduct.sku)
+    assertEquals(updatedProduct.sku, mockProduct.sku)
+    assertEquals(updatedProduct.name, mockProduct.name)
+    assertEquals(updatedProduct.isMarketable, false)
+    assertEquals(updatedProduct.inventory.quantity, 0)
+    assertEquals(updatedProduct.inventory.warehouses[0].quantity,0)
   }
 
   @Test

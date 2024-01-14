@@ -1,11 +1,11 @@
-package br.com.blz.testjava.service
+package br.com.blz.testjava.function
 
 import br.com.blz.testjava.dto.responses.ProductResponse
 import br.com.blz.testjava.dto.responses.ProductResponse.Inventory
 import br.com.blz.testjava.dto.responses.ProductResponse.Inventory.Warehouse
 
-private val productName: String = "L'Oréal Professionnel Expert Absolut Repair Cortex Lipidium - Máscara de Reconstrução 500g"
-private val sku: Long = 43264
+private const val productName: String = "L'Oréal Professionnel Expert Absolut Repair Cortex Lipidium - Máscara de Reconstrução 500g"
+private const val sku: Long = 43264
 
   fun createProductResponse(): ProductResponse {
     return ProductResponse(
@@ -21,3 +21,18 @@ private val sku: Long = 43264
       isMarketable = true
     )
   }
+
+fun updatedProductResponse(): ProductResponse {
+  return ProductResponse(
+    sku = sku,
+    name = productName,
+    inventory = Inventory(
+      quantity = 0,
+      warehouses = listOf(
+        Warehouse("RJ", 0, "ECOMMERCE"),
+        Warehouse("PR", 0, "PHYSICAL_STORE")
+      )
+    ),
+    isMarketable = false
+  )
+}

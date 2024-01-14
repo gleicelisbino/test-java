@@ -4,8 +4,8 @@ import br.com.blz.testjava.dto.requests.ProductRequest
 import br.com.blz.testjava.dto.responses.ProductResponse
 import br.com.blz.testjava.model.Product
 import br.com.blz.testjava.ProductMapper
-import br.com.blz.testjava.repository.ProductAlreadyExistsException
-import br.com.blz.testjava.repository.ProductNotFoundException
+import br.com.blz.testjava.exception.ProductAlreadyExistsException
+import br.com.blz.testjava.exception.ProductNotFoundException
 import br.com.blz.testjava.repository.ProductRepository
 import org.springframework.stereotype.Service
 
@@ -40,7 +40,7 @@ class ProductService(private val productRepository: ProductRepository,
     productRepository.deleteBySku(sku)
   }
 
-  fun calculateInventoryAndMarketable(product: Product): Product {
+  private fun calculateInventoryAndMarketable(product: Product): Product {
     val inventoryQuantity = product.inventory.warehouses.sumOf { it.quantity }
     val ismarketable = inventoryQuantity > 0
 
@@ -49,6 +49,4 @@ class ProductService(private val productRepository: ProductRepository,
       ismarketable = ismarketable
     )
   }
-
-
 }
