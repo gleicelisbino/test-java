@@ -1,4 +1,3 @@
 package br.com.blz.testjava.exception
 
-class ProductAlreadyExistsException(sku: Long) :
-  IllegalArgumentException("The product with SKU: $sku already exists.")
+class ProductAlreadyExistsException(sku: Long) : RuntimeException("O produto com SKU: $sku já existe.")
