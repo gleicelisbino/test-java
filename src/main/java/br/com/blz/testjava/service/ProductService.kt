@@ -1,17 +1,19 @@
 package br.com.blz.testjava.service
 
+import br.com.blz.testjava.ProductMapper
 import br.com.blz.testjava.dto.requests.ProductRequest
 import br.com.blz.testjava.dto.responses.ProductResponse
-import br.com.blz.testjava.model.Product
-import br.com.blz.testjava.ProductMapper
 import br.com.blz.testjava.exception.ProductAlreadyExistsException
 import br.com.blz.testjava.exception.ProductNotFoundException
+import br.com.blz.testjava.model.Product
 import br.com.blz.testjava.repository.ProductRepository
 import org.springframework.stereotype.Service
 
 @Service
-class ProductService(private val productRepository: ProductRepository,
-                     private val productMapper: ProductMapper) {
+class ProductService(
+  private val productRepository: ProductRepository,
+  private val productMapper: ProductMapper
+) {
 
   fun createProduct(request: ProductRequest): ProductResponse {
     val product = productMapper.toProduct(request)

@@ -5,4 +5,3 @@ data class Warehouse(
   val quantity: Int,
   val type: String
 )
-

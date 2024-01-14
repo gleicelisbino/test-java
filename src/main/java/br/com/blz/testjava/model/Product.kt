@@ -6,4 +6,3 @@ data class Product(
   val inventory: Inventory,
   val ismarketable: Boolean
 )
-

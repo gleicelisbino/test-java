@@ -1,10 +1,10 @@
 package br.com.blz.testjava.repository
 
 import br.com.blz.testjava.function.createProduct
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class ProductRepositoryTest {
 

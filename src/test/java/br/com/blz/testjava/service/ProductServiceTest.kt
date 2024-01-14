@@ -2,11 +2,18 @@ package br.com.blz.testjava.service
 
 import br.com.blz.testjava.ProductMapper
 import br.com.blz.testjava.dto.requests.ProductRequest
-import br.com.blz.testjava.model.Product
 import br.com.blz.testjava.exception.ProductAlreadyExistsException
 import br.com.blz.testjava.exception.ProductNotFoundException
-import br.com.blz.testjava.function.*
+import br.com.blz.testjava.function.createProduct
+import br.com.blz.testjava.function.createProductRequest
+import br.com.blz.testjava.function.createProductResponse
+import br.com.blz.testjava.function.updatedProduct
+import br.com.blz.testjava.function.updatedProductRequest
+import br.com.blz.testjava.function.updatedProductResponse
+import br.com.blz.testjava.model.Product
 import br.com.blz.testjava.repository.ProductRepository
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -14,8 +21,6 @@ import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
 
 @SpringBootTest
 class ProductServiceTest {
@@ -47,7 +52,7 @@ class ProductServiceTest {
     productRepository = Mockito.mock(ProductRepository::class.java)
     productMapper = Mockito.mock(ProductMapper::class.java)
 
-    productService = ProductService(productRepository,productMapper)
+    productService = ProductService(productRepository, productMapper)
 
     `when`(productMapper.toProduct(productRequest)).thenReturn(mockProduct)
     `when`(productMapper.toProductResponse(mockProduct)).thenReturn(createProductResponse())
@@ -101,7 +106,7 @@ class ProductServiceTest {
     assertEquals(updatedProduct.name, mockProduct.name)
     assertEquals(updatedProduct.isMarketable, false)
     assertEquals(updatedProduct.inventory.quantity, 0)
-    assertEquals(updatedProduct.inventory.warehouses[0].quantity,0)
+    assertEquals(updatedProduct.inventory.warehouses[0].quantity, 0)
   }
 
   @Test
@@ -116,4 +121,3 @@ class ProductServiceTest {
     assertNull(retrievedProduct)
   }
 }
-

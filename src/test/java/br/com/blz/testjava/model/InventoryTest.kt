@@ -1,7 +1,7 @@
 package br.com.blz.testjava.model
 
-import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
+import org.junit.jupiter.api.Test
 
 class InventoryTest {
 
