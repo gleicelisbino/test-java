@@ -4,7 +4,7 @@
 * Back-end Kotlin e Java 8 <img alt="Kelly-Java" height="30" width="40" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-plain.svg">
 * Maven
 * RESTful
-* Spring Boot 2+
+* Spring Boot 2.7.16
 * Testes unitários com 90% de cobertura
 
 ### Features
